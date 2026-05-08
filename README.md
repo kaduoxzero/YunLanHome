@@ -52,3 +52,22 @@
 | **搜索/同步** | Elasticsearch 7.x, Canal |
 | **消息队列** | RabbitMQ |
 | **任务调度** | XXL-JOB |
+
+## 🔗 微服务模块代码库 (Module Repositories)
+
+本项目由多个微服务模块组成，各模块分工明确，通过 Git 进行独立维护：
+
+| 模块名称 | 技术栈 | 仓库链接 | 描述 |
+| :--- | :--- | :--- | :--- |
+| **基础工程** | Java | [jzo2o-foundations](https://github.com/kaduoxzero/jzo2o-foundations) | 项目基础依赖、配置、基础工具类 |
+| **通用框架** | Java | [jzo2o-framework](https://github.com/kaduoxzero/jzo2o-framework) | 微服务通用组件、安全框架、自定义 Starter |
+| **API定义** | Java | [jzo2o-api](https://github.com/kaduoxzero/jzo2o-api) | 存放 Feign 接口定义、DTO 及 Feign 降级逻辑 |
+| **API网关** | Java | [jzo2o-gateway](https://github.com/kaduoxzero/jzo2o-gateway) | 基于 Spring Cloud Gateway 的统一接入入口 |
+| **前端工程** | Vue.js | [jzo2o-front](https://github.com/kaduoxzero/jzo2o-front) | 平台管理端、移动端 H5 界面 |
+| **客户服务** | Java | [jzo2o-customer](https://github.com/kaduoxzero/jzo2o-customer) | 用户管理、地址簿、身份认证等 |
+| **营销服务** | Java | [jzo2o-market](https://github.com/kaduoxzero/jzo2o-market) | 优惠券发放、活动营销、秒杀抢券逻辑 |
+| **订单服务** | Java | [jzo2o-order](https://github.com/kaduoxzero/jzo2o-order) | 订单生命周期管理、派单逻辑、状态机实现 |
+| **交易服务** | Java | [jzo2o-trade](https://github.com/kaduoxzero/jzo2o-trade) | 支付对接（微信/支付宝）、退款处理、交易流水 |
+| **公共服务** | Java | [jzo2o-publics](https://github.com/kaduoxzero/jzo2o-publics) | 文件上传(OSS)、短信发送、基础数据字典 |
+
+---
