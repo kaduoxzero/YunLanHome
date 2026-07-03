@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jzo2o.foundations.mapper.ServeMapper">
+
+    <select id="queryServeListByRegionId" resultType="com.jzo2o.foundations.model.dto.response.ServeResDTO">
+        SELECT
+            serve.id,
+            serve.sale_status,
+            serve.serve_item_id,
+            item.name AS serve_item_name,
+            item.serve_type_id,
+            serve.region_id,
+            item.reference_price,
+            serve.price,
+            serve.is_hot,
+            serve.create_time,
+            serve.update_time,
+            type.id serve_type_id,
+            type.name serve_type_name
+        FROM
+            serve
+                inner JOIN serve_item AS item ON serve.serve_item_id = item.id
+                inner JOIN serve_type AS type ON item.serve_type_id = type.id
+        WHERE
+            serve.region_id = #{regionId}
+    </select>
+
+    <!--自定义结果封装-->
+    <resultMap id="serveMap1" type="com.jzo2o.foundations.model.dto.response.ServeCategoryResDTO">
+        <result column="serveTypeId" property="serveTypeId"></result>
+        <result column="serveTypeName" property="serveTypeName"></result>
+        <result column="serveTypeIcon" property="serveTypeIcon"></result>
+        <result column="cityCode" property="cityCode"></result>
+        <result column="serveTypeSortNum" property="serveTypeSortNum"></result>
+
+        <collection property="serveResDTOList" ofType="com.jzo2o.foundations.model.dto.response.ServeSimpleResDTO">
+            <result column="id" property="id"></result>
+            <result column="serveItemId" property="serveItemId"></result>
+            <result column="serveItemName" property="serveItemName"></result>
+            <result column="serveItemIcon" property="serveItemIcon"></result>
+            <result column="serveItemSortNum" property="serveItemSortNum"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findListByRegionId" resultMap="serveMap1">
+        select
+            st.id as serveTypeId,
+            st.name as serveTypeName,
+            st.serve_type_icon as serveTypeIcon,
+            st.sort_num as serveTypeSortNum,
+            s.city_code as cityCode,
+            s.id as id,
+            si.id as serveItemId,
+            si.name as serveItemName,
+            si.serve_item_icon as serveItemIcon,
+            si.sort_num as serveItemSortNum
+        from serve s
+                 inner join serve_item si on s.serve_item_id = si.id
+                 inner join serve_type st on si.serve_type_id = st.id
+        where s.region_id = #{regionId} and s.sale_status = 2
+        order by st.sort_num asc ,si.sort_num asc
+    </select>
+
+    <select id="findServeListByRegionId"
+            resultType="com.jzo2o.foundations.model.dto.response.ServeAggregationSimpleResDTO"
+            parameterType="java.lang.Long">
+        select
+            s.id as id,
+            s.city_code as cityCode,
+            si.name as serveItemName,
+            s.serve_item_id as serveItemId,
+            si.unit as unit,
+            si.detail_img as detailImg,
+            s.price as price,
+            si.img as serveItemImg
+        from serve s inner join serve_item si on s.serve_item_id = si.id
+        where s.region_id = #{regionId}
+          and s.is_hot = 1
+          and s.sale_status = 2
+        order by s.update_time desc
+    </select>
+
+    <select id="findServeTypeListByRegionId"
+            resultType="com.jzo2o.foundations.model.dto.response.ServeAggregationTypeSimpleResDTO"
+            parameterType="java.lang.Long">
+        select
+            st.id as serveTypeId,
+            st.img as serveTypeImg,
+            st.sort_num as serveTypeSortNum,
+            st.name as serveTypeName
+        from serve s
+                 inner join serve_item si on s.serve_item_id = si.id
+                 inner join serve_type st on si.serve_type_id = st.id
+        where s.region_id = #{regionId}
+          and s.sale_status = 2
+          and st.active_status = 2
+        group by st.id
+    </select>
+
+    <select id="findServeDetailById" resultType="com.jzo2o.api.foundations.dto.response.ServeAggregationResDTO">
+        SELECT
+            s.id,
+            s.city_code,
+            s.price,
+            s.is_hot,
+            s.hot_time_stamp,
+            s.sale_status,
+            si.id AS serve_item_id,
+            si.`name` AS serve_item_name,
+            si.img AS serve_item_img,
+            si.detail_img,
+            si.serve_item_icon,
+            si.unit,
+            si.sort_num AS serve_item_sort_num,
+            si.serve_type_id AS serve_type_id,
+            st.`name` AS serve_type_name,
+            st.img AS serve_type_img,
+            st.serve_type_icon,
+            st.sort_num AS serve_type_sort_num
+        FROM
+            serve s
+                inner JOIN serve_item si ON si.id = s.serve_item_id
+                inner JOIN serve_type st ON st.id = si.serve_type_id
+        WHERE
+            s.id = #{id}
+    </select>
+
+</mapper>
